@@ -3,6 +3,7 @@
 namespace LinguaLeo\Security\Cookie;
 
 use LinguaLeo\Security\CookieInterface;
+use LinguaLeo\Security\Exception\SecurityException;
 
 class BinaryCookie implements CookieInterface
 {
@@ -13,7 +14,7 @@ class BinaryCookie implements CookieInterface
     public function getChecksum()
     {
         if (!$this->id) {
-            throw new \RuntimeException('The identifier is empty');
+            throw new SecurityException('The identifier is empty');
         }
         return $this->id.$this->time;
     }

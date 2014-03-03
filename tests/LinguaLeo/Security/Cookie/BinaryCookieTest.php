@@ -45,7 +45,7 @@ class BinaryCookieTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \LinguaLeo\Security\Exception\SecurityException
      * @expectedExceptionMessage The identifier is empty
      */
     public function testFailedGetChecksum()
