@@ -10,14 +10,6 @@ class BinaryCookie implements CookieInterface
 
     private $time;
 
-    public function __construct($now = null)
-    {
-        if (!$now) {
-            $now = time();
-        }
-        $this->time = $now;
-    }
-
     public function getChecksum()
     {
         if (!$this->id) {
@@ -49,8 +41,12 @@ class BinaryCookie implements CookieInterface
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId($id, $now = null)
     {
         $this->id = $id;
+        if (!$now) {
+            $now = time();
+        }
+        $this->time = $now;
     }
 }

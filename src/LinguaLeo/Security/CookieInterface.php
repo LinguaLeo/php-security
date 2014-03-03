@@ -14,5 +14,5 @@ interface CookieInterface
 
     public function getId();
 
-    public function setId($id);
+    public function setId($id, $now = null);
 }

@@ -19,8 +19,8 @@ class BinaryCookieTest extends \PHPUnit_Framework_TestCase
      */
     public function testPack($package, $id, $time, $sig)
     {
-        $cookie = new BinaryCookie($time);
-        $cookie->setId($id);
+        $cookie = new BinaryCookie();
+        $cookie->setId($id, $time);
         $this->assertSame($package, $cookie->pack($sig));
     }
 
@@ -39,8 +39,8 @@ class BinaryCookieTest extends \PHPUnit_Framework_TestCase
     {
         $id = 1;
         $now = time();
-        $cookie = new BinaryCookie($now);
-        $cookie->setId($id);
+        $cookie = new BinaryCookie();
+        $cookie->setId($id, $now);
         $this->assertSame($id.$now, $cookie->getChecksum());
     }
 
