@@ -22,6 +22,10 @@ class Serializer
     public function unserialize(CookieInterface $cookie, $raw)
     {
         $sig = $cookie->unpack($raw);
-        return $this->signature->verify($cookie->getChecksum(), $sig, $this->secretKey);
+        $ok = $this->signature->verify($cookie->getChecksum(), $sig, $this->secretKey);
+        if (!$ok) {
+            $cookie->setId(null);
+        }
+        return $ok;
     }
 }
