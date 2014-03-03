@@ -15,9 +15,9 @@ class HMACTest extends \PHPUnit_Framework_TestCase
     public function providerSign()
     {
         return [
-            ['052b22fdc0ff9f4c4f4e8c48911d9c75bba09df1', 'how much is the fish?', 'verysecretlongkey0'],
-            ['a717c6c5121fd61dbaf59e623a6d53afd784fb39', 'how old are you?', 'verysecretlongkey1'],
-            ['78571865eccc1c81d3f2a5294d67549451c275ba', 'how to create a database?', 'verysecretlongkey2'],
+            ['3f8fc5b258b25102952b0c8acde50d5d653e2dc2529052be849f2dad4dfa4bc2', 'how much is the fish?', 'verysecretlongkey0'],
+            ['3ab02474b84c0abb854e628fe7c349248ef048202599334ffbcf1f4d1d68cbf2', 'how old are you?', 'verysecretlongkey1'],
+            ['e3207f6a3cff45604ca5379270cd1a6f1f5f69da825802755612bce8507fa2cf', 'how to create a database?', 'verysecretlongkey2'],
         ];
     }
 

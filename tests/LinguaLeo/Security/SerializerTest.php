@@ -20,7 +20,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [
-                '01000000797b1453cbd4d2368998e22534c23c3c7f1fa73375c2f415',
+                '01000000797b14534f37b2fc34dd07fe11deaa57c84084e1764567902ac8e19f85893185a7e0a75a',
                 1,
                 1393851257
             ]
