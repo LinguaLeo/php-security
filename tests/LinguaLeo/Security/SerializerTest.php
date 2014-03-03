@@ -32,9 +32,17 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSerialize($package, $id, $now)
     {
-        $cookie = new BinaryCookie();
-        $cookie->setId($id, $now);
+        $cookie = new BinaryCookie($id, $now);
         $this->assertSame($package, $this->serializer->serialize($cookie));
+    }
+
+    /**
+     * @expectedException \LinguaLeo\Security\Exception\SecurityException
+     * @expectedExceptionMessage We cannot perform the signature because the cookie is invalid.
+     */
+    public function testFailedValidationOnSerialize()
+    {
+        $this->serializer->serialize(new BinaryCookie());
     }
 
     /**
@@ -42,16 +50,25 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
      */
     public function testUnserialize($package, $id, $now)
     {
-        $cookie = new BinaryCookie();
-        $this->assertTrue($this->serializer->unserialize($cookie, $package));
+        $cookie = $this->serializer->unserialize(new BinaryCookie(), $package);
+        $this->assertTrue($cookie->isValid());
         $this->assertSame($id, $cookie->getId());
         $this->assertTrue($cookie->isAlive($now));
     }
 
     public function testFailedUnserialize()
     {
-        $cookie = new BinaryCookie();
-        $this->assertFalse($this->serializer->unserialize($cookie, md5(time())));
+        $cookie = $this->serializer->unserialize(new BinaryCookie(), md5(time()));
+        $this->assertFalse($cookie->isValid());
         $this->assertNull($cookie->getId());
+    }
+
+    /**
+     * @expectedException \LinguaLeo\Security\Exception\SecurityException
+     * @expectedExceptionMessage We cannot perform the verification because the cookie "abcd" is invalid.
+     */
+    public function testFailedValidationOnUnserialize()
+    {
+        $this->serializer->unserialize(new BinaryCookie(), 'abcd');
     }
 }

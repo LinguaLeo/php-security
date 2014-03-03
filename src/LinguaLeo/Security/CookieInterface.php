@@ -14,5 +14,7 @@ interface CookieInterface
 
     public function getId();
 
-    public function setId($id, $now = null);
+    public function isValid();
+
+    public function invalidate();
 }

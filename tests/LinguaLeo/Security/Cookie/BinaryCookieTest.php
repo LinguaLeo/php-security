@@ -19,8 +19,7 @@ class BinaryCookieTest extends \PHPUnit_Framework_TestCase
      */
     public function testPack($package, $id, $time, $sig)
     {
-        $cookie = new BinaryCookie();
-        $cookie->setId($id, $time);
+        $cookie = new BinaryCookie($id, $time);
         $this->assertSame($package, $cookie->pack($sig));
     }
 
@@ -31,6 +30,7 @@ class BinaryCookieTest extends \PHPUnit_Framework_TestCase
     {
         $cookie = new BinaryCookie();
         $this->assertSame($sig, $cookie->unpack($package));
+        $this->assertTrue($cookie->isValid());
         $this->assertSame($id, $cookie->getId());
         $this->assertTrue($cookie->isAlive($time));
     }
@@ -39,17 +39,7 @@ class BinaryCookieTest extends \PHPUnit_Framework_TestCase
     {
         $id = 1;
         $now = time();
-        $cookie = new BinaryCookie();
-        $cookie->setId($id, $now);
+        $cookie = new BinaryCookie($id, $now);
         $this->assertSame($id.$now, $cookie->getChecksum());
-    }
-
-    /**
-     * @expectedException \LinguaLeo\Security\Exception\SecurityException
-     * @expectedExceptionMessage The identifier is empty
-     */
-    public function testFailedGetChecksum()
-    {
-        (new BinaryCookie())->getChecksum();
     }
 }

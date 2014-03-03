@@ -2,6 +2,8 @@
 
 namespace LinguaLeo\Security;
 
+use LinguaLeo\Security\Exception\SecurityException;
+
 class Serializer
 {
     private $signature;
@@ -15,6 +17,9 @@ class Serializer
 
     public function serialize(CookieInterface $cookie)
     {
+        if (!$cookie->isValid()) {
+            throw new SecurityException('We cannot perform the signature because the cookie is invalid.');
+        }
         $sig = $this->signature->sign($cookie->getChecksum(), $this->secretKey);
         return $cookie->pack($sig);
     }
@@ -22,10 +27,12 @@ class Serializer
     public function unserialize(CookieInterface $cookie, $raw)
     {
         $sig = $cookie->unpack($raw);
-        $ok = $this->signature->verify($cookie->getChecksum(), $sig, $this->secretKey);
-        if (!$ok) {
-            $cookie->setId(null);
+        if (!$cookie->isValid()) {
+            throw new SecurityException(sprintf('We cannot perform the verification because the cookie "%s" is invalid.', $raw));
         }
-        return $ok;
+        if (!$this->signature->verify($cookie->getChecksum(), $sig, $this->secretKey)) {
+            $cookie->invalidate();
+        }
+        return $cookie;
     }
 }
