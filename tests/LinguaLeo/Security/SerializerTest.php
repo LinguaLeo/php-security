@@ -19,18 +19,18 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     public function providerPackage()
     {
         return [
-            ['683b01000000797b1453b5a60f007e138bf2c3e8b122f1d3fb6ee847e29b', 1, 1393851257, 15208],
-            ['942e02000000887b14531e66808a01ec40b745b4280ea43d202f18d6e8b2', 2, 1393851272, 11924],
-            ['3a00030000009d7b1453f4ce282d191307023f4cbc4b23a22fb71cb30b2c', 3, 1393851293, 58],
+            ['01000000dc912a253d1e9ba40e2c597ed2376640f9228fdff3ae916fd236150f2427c6d3cac687a6', 1, 385],
+            ['020000007a614fd06c325499f1680b9896beedeb7fe3d81ea85291fff4b58e4f53675b5c62be88da', 2, 272],
+            ['0300000098dce83da57b0395e163467c9dae521b2fd59665be642ffe38366e361c9ffa5154351bbc', 3, 93],
         ];
     }
 
     /**
      * @dataProvider providerPackage
      */
-    public function testSerialize($package, $id, $now, $salt)
+    public function testSerialize($package, $id, $salt)
     {
-        $this->assertSame($package, $this->serializer->serialize(new BinaryCookie($id, $now, $salt)));
+        $this->assertSame($package, $this->serializer->serialize(new BinaryCookie($id, $salt)));
     }
 
     /**
@@ -45,17 +45,16 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerPackage
      */
-    public function testUnserialize($package, $id, $now, $salt)
+    public function testUnserialize($package, $id)
     {
         $cookie = $this->serializer->unserialize(new BinaryCookie(), $package);
         $this->assertTrue($cookie->isValid());
         $this->assertSame($id, $cookie->getId());
-        $this->assertTrue($cookie->isAlive($now));
     }
 
     public function testFailedUnserialize()
     {
-        $cookie = $this->serializer->unserialize(new BinaryCookie(), md5(time()));
+        $cookie = $this->serializer->unserialize(new BinaryCookie(), '01000000'.md5(time()));
         $this->assertFalse($cookie->isValid());
         $this->assertNull($cookie->getId());
     }

@@ -8,7 +8,7 @@ class HMAC implements SignatureInterface
 {
     private $algo;
 
-    public function __construct($algo = 'sha256')
+    public function __construct($algo = 'sha1')
     {
         $this->algo = $algo;
     }

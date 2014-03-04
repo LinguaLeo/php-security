@@ -7,39 +7,29 @@ class BinaryCookieTest extends \PHPUnit_Framework_TestCase
     public function providerPackage()
     {
         return [
-            ['a5c101000000284f1453ac3548cfe2', 1, 1393839912, 49573, 'ac3548cfe2'],
-            ['7a1802000000304f14530d6a1d13f1', 2, 1393839920, 6266, '0d6a1d13f1'],
-            ['e17803000000374f14536a1d13fd9e', 3, 1393839927, 30945, '6a1d13fd9e'],
-            ['f4ee040000003d4f14535827057a', 4, 1393839933, 61172, '5827057a'],
+            ['01000000e7a8f1d8b045098d76172897a21d6373ac3548cfe2', 'ac3548cfe2', 1, 9636],
+            ['0200000084e2d85ac232c681a641da1ec663888c0d6a1d13f1', '0d6a1d13f1', 2, 6117],
+            ['0300000045645a27c4f1adc8a7a835976064a86d6a1d13fd9e', '6a1d13fd9e', 3, 626],
+            ['0400000054229abfcfa5649e7003b83dd47552945827057a', '5827057a', 4, 91],
         ];
     }
 
     /**
      * @dataProvider providerPackage
      */
-    public function testPack($package, $id, $time, $salt, $sig)
+    public function testPack($package, $sig, $id, $salt)
     {
-        $this->assertSame($package, (new BinaryCookie($id, $time, $salt))->pack($sig));
+        $this->assertSame($package, (new BinaryCookie($id, $salt))->pack($sig));
     }
 
     /**
      * @dataProvider providerPackage
      */
-    public function testUnpack($package, $id, $time, $salt, $sig)
+    public function testUnpack($package, $sig, $id)
     {
         $cookie = new BinaryCookie();
         $this->assertSame($sig, $cookie->unpack($package));
         $this->assertTrue($cookie->isValid());
         $this->assertSame($id, $cookie->getId());
-        $this->assertTrue($cookie->isAlive($time));
-    }
-
-    public function testGetChecksum()
-    {
-        $id = rand();
-        $now = rand();
-        $salt = rand();
-        $cookie = new BinaryCookie($id, $now, $salt);
-        $this->assertSame($id.'/'.$now.'/'.$salt, $cookie->getChecksum());
     }
 }

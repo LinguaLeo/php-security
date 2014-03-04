@@ -10,8 +10,6 @@ interface CookieInterface
 
     public function unpack($raw);
 
-    public function isAlive($threshold);
-
     public function getId();
 
     public function isValid();
