@@ -13,27 +13,24 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        $this->serializer = new Serializer(new HMAC(), 'verysecretlongkey');
+        $this->serializer = new Serializer(new HMAC('sha1'), 'verysecretlongkey');
     }
 
     public function providerPackage()
     {
         return [
-            [
-                '01000000797b14534f37b2fc34dd07fe11deaa57c84084e1764567902ac8e19f85893185a7e0a75a',
-                1,
-                1393851257
-            ]
+            ['683b01000000797b1453b5a60f007e138bf2c3e8b122f1d3fb6ee847e29b', 1, 1393851257, 15208],
+            ['942e02000000887b14531e66808a01ec40b745b4280ea43d202f18d6e8b2', 2, 1393851272, 11924],
+            ['3a00030000009d7b1453f4ce282d191307023f4cbc4b23a22fb71cb30b2c', 3, 1393851293, 58],
         ];
     }
 
     /**
      * @dataProvider providerPackage
      */
-    public function testSerialize($package, $id, $now)
+    public function testSerialize($package, $id, $now, $salt)
     {
-        $cookie = new BinaryCookie($id, $now);
-        $this->assertSame($package, $this->serializer->serialize($cookie));
+        $this->assertSame($package, $this->serializer->serialize(new BinaryCookie($id, $now, $salt)));
     }
 
     /**
@@ -48,7 +45,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerPackage
      */
-    public function testUnserialize($package, $id, $now)
+    public function testUnserialize($package, $id, $now, $salt)
     {
         $cookie = $this->serializer->unserialize(new BinaryCookie(), $package);
         $this->assertTrue($cookie->isValid());
