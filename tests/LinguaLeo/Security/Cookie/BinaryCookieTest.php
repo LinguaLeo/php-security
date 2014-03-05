@@ -14,6 +14,17 @@ class BinaryCookieTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function providerNotValidId()
+    {
+        return [
+            [true],
+            [array()],
+            [new \stdClass()],
+            ['ff'],
+            ['00a']
+        ];
+    }
+
     /**
      * @dataProvider providerPackage
      */
@@ -32,4 +43,13 @@ class BinaryCookieTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($cookie->isValid());
         $this->assertSame($id, $cookie->getId());
     }
+
+    /**
+     * @dataProvider providerNotValidId
+     */
+    public function testIsNotValid($id)
+    {
+        $this->assertFalse((new BinaryCookie($id))->isValid());
+    }
+
 }
