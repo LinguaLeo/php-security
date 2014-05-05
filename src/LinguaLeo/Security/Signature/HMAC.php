@@ -1,5 +1,4 @@
 <?php
-
 namespace LinguaLeo\Security\Signature;
 
 use LinguaLeo\Security\SignatureInterface;

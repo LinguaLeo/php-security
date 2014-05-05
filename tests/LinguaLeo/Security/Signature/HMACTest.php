@@ -1,5 +1,4 @@
 <?php
-
 namespace LinguaLeo\Security\Signature;
 
 class HMACTest extends \PHPUnit_Framework_TestCase

@@ -1,5 +1,4 @@
 <?php
-
 namespace LinguaLeo\Security\Cookie;
 
 class BinaryCookieTest extends \PHPUnit_Framework_TestCase

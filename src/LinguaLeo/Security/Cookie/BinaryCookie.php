@@ -1,5 +1,4 @@
 <?php
-
 namespace LinguaLeo\Security\Cookie;
 
 use LinguaLeo\Security\CookieInterface;

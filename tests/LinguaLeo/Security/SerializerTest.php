@@ -1,5 +1,4 @@
 <?php
-
 namespace LinguaLeo\Security;
 
 use LinguaLeo\Security\Signature\HMAC;
