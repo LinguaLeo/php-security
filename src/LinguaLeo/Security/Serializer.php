@@ -2,6 +2,8 @@
 namespace LinguaLeo\Security;
 
 use LinguaLeo\Security\Exception\SecurityException;
+use LinguaLeo\Security\Exception\ValidationException;
+use LinguaLeo\Security\Exception\SignatureViolationException;
 
 class Serializer
 {
@@ -17,10 +19,7 @@ class Serializer
     public function serialize(CookieInterface $cookie)
     {
         if (!$cookie->isValid()) {
-            throw new SecurityException(
-                'We cannot perform the signature because the cookie is invalid.',
-                SecurityException::INVALID_DATA
-            );
+            throw new ValidationException('The cookie has an invalid data.');
         }
         $sig = $this->signature->sign($cookie->getChecksum(), $this->secretKey);
         return $cookie->pack($sig);
@@ -45,7 +44,7 @@ class Serializer
     {
         $trimmed = trim($raw);
         if (!$trimmed) {
-            throw new SecurityException('The cookie is empty.', SecurityException::NO_DATA);
+            throw new ValidationException('The cookie is empty.');
         }
         return $trimmed;
     }
@@ -54,9 +53,8 @@ class Serializer
     {
         $sig = $cookie->unpack($raw);
         if (!$cookie->isValid()) {
-            throw new SecurityException(
-                sprintf('We cannot perform the verification because the cookie "%s" is invalid.', $raw),
-                SecurityException::INVALID_DATA
+            throw new ValidationException(
+                sprintf('The cookie "%s" has an invalid format.', $raw)
             );
         }
         return $sig;
@@ -65,10 +63,7 @@ class Serializer
     private function verifyCookie(CookieInterface $cookie, $sig)
     {
         if (!$this->signature->verify($cookie->getChecksum(), $sig, $this->secretKey)) {
-            throw new SecurityException(
-                'The cookie verification is not passed.',
-                SecurityException::SIGNATURE_VIOLATION
-            );
+            throw new SignatureViolationException('The cookie verification is not passed.');
         }
     }
 }

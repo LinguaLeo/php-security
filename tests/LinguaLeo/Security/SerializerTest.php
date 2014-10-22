@@ -3,6 +3,7 @@ namespace LinguaLeo\Security;
 
 use LinguaLeo\Security\Signature\HMAC;
 use LinguaLeo\Security\Cookie\BinaryCookie;
+use LinguaLeo\Security\Exception\SecurityException;
 
 class SerializerTest extends \PHPUnit_Framework_TestCase
 {
@@ -33,9 +34,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \LinguaLeo\Security\Exception\SecurityException
-     * @expectedExceptionMessage We cannot perform the signature because the cookie is invalid.
-     * @@expectedExceptionCode \LinguaLeo\Security\Exception\SecurityException::INVALID_DATA
+     * @expectedException \LinguaLeo\Security\Exception\ValidationException
+     * @expectedExceptionMessage The cookie has an invalid data.
      */
     public function testFailedValidationOnSerialize()
     {
@@ -53,9 +53,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \LinguaLeo\Security\Exception\SecurityException
+     * @expectedException \LinguaLeo\Security\Exception\SignatureViolationException
      * @expectedExceptionMessage The cookie verification is not passed.
-     * @@expectedExceptionCode \LinguaLeo\Security\Exception\SecurityException::SIGNATURE_VIOLATION
      */
     public function testFailedUnserialize()
     {
@@ -63,9 +62,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \LinguaLeo\Security\Exception\SecurityException
-     * @expectedExceptionMessage We cannot perform the verification because the cookie "abcd" is invalid.
-     * @@expectedExceptionCode \LinguaLeo\Security\Exception\SecurityException::INVALID_DATA
+     * @expectedException \LinguaLeo\Security\Exception\ValidationException
+     * @expectedExceptionMessage The cookie "abcd" has an invalid format.
      */
     public function testFailedValidationOnUnserialize()
     {
@@ -73,9 +71,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \LinguaLeo\Security\Exception\SecurityException
+     * @expectedException \LinguaLeo\Security\Exception\ValidationException
      * @expectedExceptionMessage The cookie is empty.
-     * @@expectedExceptionCode \LinguaLeo\Security\Exception\SecurityException::NO_DATA
      */
     public function testFailedUnserializeForEmptyCookie()
     {
@@ -99,7 +96,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $cookie = new BinaryCookie(75772);
         try {
             $this->serializer->unserialize($cookie, $raw);
-        } catch (\LinguaLeo\Security\Exception\SecurityException $e) {
+        } catch (SecurityException $e) {
             $this->assertFalse($cookie->isValid());
             error_log($e->getMessage());
         }

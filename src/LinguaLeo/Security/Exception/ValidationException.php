@@ -2,7 +2,7 @@
 namespace LinguaLeo\Security\Exception;
 
 // @codeCoverageIgnoreStart
-class SecurityException extends \Exception
+class ValidationException extends SecurityException
 {
 }
 // @codeCoverageIgnoreEnd
