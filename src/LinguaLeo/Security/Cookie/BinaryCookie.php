@@ -63,6 +63,5 @@ class BinaryCookie implements CookieInterface
     public function invalidate()
     {
         $this->id = null;
-        return $this;
     }
 }

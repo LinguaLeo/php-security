@@ -42,8 +42,6 @@ interface CookieInterface
 
     /**
      * Invalidates cookie's data
-     *
-     * @return CookieInterface
      */
     public function invalidate();
 }
