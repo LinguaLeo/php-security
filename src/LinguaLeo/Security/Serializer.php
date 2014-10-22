@@ -25,13 +25,43 @@ class Serializer
 
     public function unserialize(CookieInterface $cookie, $raw)
     {
-        $sig = $cookie->unpack($raw);
-        if (!$cookie->isValid()) {
-            throw new SecurityException(sprintf('We cannot perform the verification because the cookie "%s" is invalid.', $raw));
-        }
-        if (!$this->signature->verify($cookie->getChecksum(), $sig, $this->secretKey)) {
+        try {
+            $this->verifyCookie($cookie,
+                $this->unpackCookie($cookie,
+                    $this->prepareRaw($raw)
+                )
+            );
+        } catch (SecurityException $e) {
             $cookie->invalidate();
+            throw $e;
         }
         return $cookie;
+    }
+
+    private function prepareRaw($raw)
+    {
+        $trimmed = trim($raw);
+        if (!$trimmed) {
+            throw new SecurityException('The cookie is empty.');
+        }
+        return $trimmed;
+    }
+
+    private function unpackCookie(CookieInterface $cookie, $raw)
+    {
+        $sig = $cookie->unpack($raw);
+        if (!$cookie->isValid()) {
+            throw new SecurityException(
+                sprintf('We cannot perform the verification because the cookie "%s" is invalid.', $raw)
+            );
+        }
+        return $sig;
+    }
+
+    private function verifyCookie(CookieInterface $cookie, $sig)
+    {
+        if (!$this->signature->verify($cookie->getChecksum(), $sig, $this->secretKey)) {
+            throw new SecurityException('The cookie verification is not passed.');
+        }
     }
 }

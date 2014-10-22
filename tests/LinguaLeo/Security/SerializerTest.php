@@ -51,11 +51,13 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($id, $cookie->getId());
     }
 
+    /**
+     * @expectedException \LinguaLeo\Security\Exception\SecurityException
+     * @expectedExceptionMessage The cookie verification is not passed.
+     */
     public function testFailedUnserialize()
     {
-        $cookie = $this->serializer->unserialize(new BinaryCookie(), '01000000'.md5(time()));
-        $this->assertFalse($cookie->isValid());
-        $this->assertNull($cookie->getId());
+        $this->serializer->unserialize(new BinaryCookie(), '01000000'.md5(time()));
     }
 
     /**
@@ -65,5 +67,37 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     public function testFailedValidationOnUnserialize()
     {
         $this->serializer->unserialize(new BinaryCookie(), 'abcd');
+    }
+
+    /**
+     * @expectedException \LinguaLeo\Security\Exception\SecurityException
+     * @expectedExceptionMessage The cookie is empty.
+     */
+    public function testFailedUnserializeForEmptyCookie()
+    {
+        $this->serializer->unserialize(new BinaryCookie(), '');
+    }
+
+    public function provideWrongCookieFormats()
+    {
+        return [
+            [''],
+            ['abcd'],
+            ['01000000'.md5(time())]
+        ];
+    }
+
+    /**
+     * @dataProvider provideWrongCookieFormats
+     */
+    public function testInvalidationWithCatchException($raw)
+    {
+        $cookie = new BinaryCookie(75772);
+        try {
+            $this->serializer->unserialize($cookie, $raw);
+        } catch (\LinguaLeo\Security\Exception\SecurityException $e) {
+            $this->assertFalse($cookie->isValid());
+            error_log($e->getMessage());
+        }
     }
 }
