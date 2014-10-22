@@ -35,6 +35,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \LinguaLeo\Security\Exception\SecurityException
      * @expectedExceptionMessage We cannot perform the signature because the cookie is invalid.
+     * @@expectedExceptionCode \LinguaLeo\Security\Exception\SecurityException::INVALID_DATA
      */
     public function testFailedValidationOnSerialize()
     {
@@ -54,6 +55,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \LinguaLeo\Security\Exception\SecurityException
      * @expectedExceptionMessage The cookie verification is not passed.
+     * @@expectedExceptionCode \LinguaLeo\Security\Exception\SecurityException::SIGNATURE_VIOLATION
      */
     public function testFailedUnserialize()
     {
@@ -63,6 +65,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \LinguaLeo\Security\Exception\SecurityException
      * @expectedExceptionMessage We cannot perform the verification because the cookie "abcd" is invalid.
+     * @@expectedExceptionCode \LinguaLeo\Security\Exception\SecurityException::INVALID_DATA
      */
     public function testFailedValidationOnUnserialize()
     {
@@ -72,6 +75,7 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException \LinguaLeo\Security\Exception\SecurityException
      * @expectedExceptionMessage The cookie is empty.
+     * @@expectedExceptionCode \LinguaLeo\Security\Exception\SecurityException::NO_DATA
      */
     public function testFailedUnserializeForEmptyCookie()
     {
