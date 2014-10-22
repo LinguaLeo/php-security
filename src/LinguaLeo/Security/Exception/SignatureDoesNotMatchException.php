@@ -2,7 +2,7 @@
 namespace LinguaLeo\Security\Exception;
 
 // @codeCoverageIgnoreStart
-class SignatureViolationException extends SecurityException
+class SignatureDoesNotMatchException extends SecurityException
 {
 }
 // @codeCoverageIgnoreEnd

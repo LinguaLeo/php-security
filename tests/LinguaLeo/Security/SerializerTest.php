@@ -53,8 +53,8 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \LinguaLeo\Security\Exception\SignatureViolationException
-     * @expectedExceptionMessage The cookie verification is not passed.
+     * @expectedException \LinguaLeo\Security\Exception\SignatureDoesNotMatchException
+     * @expectedExceptionMessage The signature verification is not passed.
      */
     public function testFailedUnserialize()
     {

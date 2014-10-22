@@ -3,7 +3,7 @@ namespace LinguaLeo\Security;
 
 use LinguaLeo\Security\Exception\SecurityException;
 use LinguaLeo\Security\Exception\ValidationException;
-use LinguaLeo\Security\Exception\SignatureViolationException;
+use LinguaLeo\Security\Exception\SignatureDoesNotMatchException;
 
 class Serializer
 {
@@ -63,7 +63,7 @@ class Serializer
     private function verifyCookie(CookieInterface $cookie, $sig)
     {
         if (!$this->signature->verify($cookie->getChecksum(), $sig, $this->secretKey)) {
-            throw new SignatureViolationException('The cookie verification is not passed.');
+            throw new SignatureDoesNotMatchException('The signature verification is not passed.');
         }
     }
 }
