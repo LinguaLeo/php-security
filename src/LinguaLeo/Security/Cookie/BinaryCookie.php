@@ -5,12 +5,12 @@ use LinguaLeo\Security\CookieInterface;
 
 class BinaryCookie implements CookieInterface
 {
-    private $id;
+    private $uniq;
     private $salt;
 
-    public function __construct($id = null, $salt = null)
+    public function __construct($uniq = null, $salt = null)
     {
-        $this->id = $id;
+        $this->uniq = $uniq;
         $this->salt = md5($salt);
     }
 
@@ -19,7 +19,7 @@ class BinaryCookie implements CookieInterface
      */
     public function getChecksum()
     {
-        return $this->id.$this->salt;
+        return $this->uniq.$this->salt;
     }
 
     /**
@@ -27,7 +27,7 @@ class BinaryCookie implements CookieInterface
      */
     public function pack($sig)
     {
-        return bin2hex(pack('LH32H*', $this->id, $this->salt, $sig));
+        return bin2hex(pack('LH32H*', $this->uniq, $this->salt, $sig));
     }
 
     /**
@@ -35,8 +35,8 @@ class BinaryCookie implements CookieInterface
      */
     public function unpack($raw)
     {
-        $data = @unpack('Lid/H32salt/H*sig', hex2bin($raw));
-        $this->id = $data['id'];
+        $data = @unpack('Luniq/H32salt/H*sig', hex2bin($raw));
+        $this->uniq = $data['uniq'];
         $this->salt = $data['salt'];
         return $data['sig'];
     }
@@ -46,7 +46,7 @@ class BinaryCookie implements CookieInterface
      */
     public function getId()
     {
-        return $this->id;
+        return $this->uniq;
     }
 
     /**
@@ -54,7 +54,7 @@ class BinaryCookie implements CookieInterface
      */
     public function isValid()
     {
-        return is_int($this->id) && $this->id > 0;
+        return is_int($this->uniq) && $this->uniq > 0;
     }
 
     /**
@@ -62,6 +62,6 @@ class BinaryCookie implements CookieInterface
      */
     public function invalidate()
     {
-        $this->id = null;
+        $this->uniq = null;
     }
 }

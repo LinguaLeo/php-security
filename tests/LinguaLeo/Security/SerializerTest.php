@@ -28,9 +28,9 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerPackage
      */
-    public function testSerialize($package, $id, $salt)
+    public function testSerialize($package, $uniq, $salt)
     {
-        $this->assertSame($package, $this->serializer->serialize(new BinaryCookie($id, $salt)));
+        $this->assertSame($package, $this->serializer->serialize(new BinaryCookie($uniq, $salt)));
     }
 
     /**
@@ -45,11 +45,11 @@ class SerializerTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerPackage
      */
-    public function testUnserialize($package, $id)
+    public function testUnserialize($package, $uniq)
     {
         $cookie = $this->serializer->unserialize(new BinaryCookie(), $package);
         $this->assertTrue($cookie->isValid());
-        $this->assertSame($id, $cookie->getId());
+        $this->assertSame($uniq, $cookie->getId());
     }
 
     /**

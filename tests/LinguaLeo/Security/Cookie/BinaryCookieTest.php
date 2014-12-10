@@ -27,28 +27,27 @@ class BinaryCookieTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider providerPackage
      */
-    public function testPack($package, $sig, $id, $salt)
+    public function testPack($package, $sig, $uniq, $salt)
     {
-        $this->assertSame($package, (new BinaryCookie($id, $salt))->pack($sig));
+        $this->assertSame($package, (new BinaryCookie($uniq, $salt))->pack($sig));
     }
 
     /**
      * @dataProvider providerPackage
      */
-    public function testUnpack($package, $sig, $id)
+    public function testUnpack($package, $sig, $uniq)
     {
         $cookie = new BinaryCookie();
         $this->assertSame($sig, $cookie->unpack($package));
         $this->assertTrue($cookie->isValid());
-        $this->assertSame($id, $cookie->getId());
+        $this->assertSame($uniq, $cookie->getId());
     }
 
     /**
      * @dataProvider providerNotValidId
      */
-    public function testIsNotValid($id)
+    public function testIsNotValid($uniq)
     {
-        $this->assertFalse((new BinaryCookie($id))->isValid());
+        $this->assertFalse((new BinaryCookie($uniq))->isValid());
     }
-
 }

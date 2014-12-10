@@ -28,8 +28,10 @@ class Serializer
     public function unserialize(CookieInterface $cookie, $raw)
     {
         try {
-            $this->verifyCookie($cookie,
-                $this->unpackCookie($cookie,
+            $this->verifyCookie(
+                $cookie,
+                $this->unpackCookie(
+                    $cookie,
                     $this->prepareRaw($raw)
                 )
             );
