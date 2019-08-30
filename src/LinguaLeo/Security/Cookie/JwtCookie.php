@@ -47,7 +47,7 @@ class JwtCookie implements CookieInterface
     public function unpack($raw)
     {
         if (array_key_exists('sub', $raw)) {
-            $this->sub = $raw['sub'];
+            $this->sub = (int)$raw['sub'];
         }
         if (array_key_exists('exp', $raw)) {
             $this->exp = $raw['exp'];

@@ -3,6 +3,7 @@ namespace LinguaLeo\Security;
 
 use LinguaLeo\Security\Exception\SecurityException;
 use LinguaLeo\Security\Exception\ValidationException;
+use LinguaLeo\Security\Exception\SignatureDoesNotMatchException;
 use OAuth2\Encryption\Jwt;
 
 class JwtSerializer implements SerializerInterface
@@ -25,7 +26,7 @@ class JwtSerializer implements SerializerInterface
         }
         
         return $this->jwt->encode([
-            'sub' => $this->uniq,
+            'sub' => $cookie->getId(),
             'exp' => strtotime($this->ttl),
             'typ' => 'a'
         ]);
@@ -34,7 +35,10 @@ class JwtSerializer implements SerializerInterface
     public function unserialize(CookieInterface $cookie, $raw)
     {
         try {
-            $cookie->unpack($this->jwt->decode($raw));
+            $payload = $this->jwt->decode($raw, $this->secretKey);
+            if (is_array($payload)) {
+                $cookie->unpack($payload);
+            }
         } catch (SecurityException $e) {
             $cookie->invalidate();
             throw $e;
