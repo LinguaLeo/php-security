@@ -5,7 +5,7 @@ use LinguaLeo\Security\Exception\SecurityException;
 use LinguaLeo\Security\Exception\ValidationException;
 use LinguaLeo\Security\Exception\SignatureDoesNotMatchException;
 
-class Serializer
+class BinarySerializer implements SerializerInterface
 {
     private $signature;
     private $secretKey;
